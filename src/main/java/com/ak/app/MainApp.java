@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.logging.Logger;
+import java.util.stream.Collectors;
+import java.util.stream.DoubleStream;
 
 public class MainApp {
     private MainApp() {
@@ -39,5 +41,12 @@ public class MainApp {
             y[n] = q[n] - q[n - 1];
         }
         logger.info(() -> Arrays.toString(y));
+
+        try {
+            Files.writeString(Path.of("output.txt"),
+                    DoubleStream.of(y).mapToObj("%.6f"::formatted).collect(Collectors.joining("\n")));
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
     }
 }
