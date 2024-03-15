@@ -56,7 +56,7 @@ public class MainApp {
     logger.info(extremeValues::toString);
     Files.writeString(Path.of("output_extreme.txt"), extremeValues.toString());
 
-    List<Integer> extremeIndexes = findExtremeIndexes(y, extremeValues);
+    List<Integer> extremeIndexes = findMaximaIndexes(y, extremeValues);
     logger.info(extremeIndexes::toString);
     Files.writeString(Path.of("output_extremeindex.txt"), extremeIndexes.toString());
 
@@ -113,19 +113,6 @@ public class MainApp {
       }
     }
     return extreme;
-  }
-
-  public static List<Integer> findExtremeIndexes(double[] y, List<Double> extremeValues) {
-    List<Integer> extremeIndexes = new ArrayList<>();
-    for (double extreme : extremeValues) {
-      for (int i = 0; i < y.length; i++) {
-        if (y[i] == extreme) {
-          extremeIndexes.add(i);
-          break;  // Чтобы не добавлять один элемент несколько раз
-        }
-      }
-    }
-    return extremeIndexes;
   }
 
   public static List<Double> calculateModulusDifferences(List<Double> extremeValues) {
