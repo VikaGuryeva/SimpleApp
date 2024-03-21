@@ -29,7 +29,7 @@ public class MainApp {
 
     double[] q = new double[x.length];
     double[] y = new double[x.length];
-    double a = 0.95;
+    double a = 0.999;
     y[0] = x[0];
     q[0] = x[0];
     for (int n = 1; n < x.length; n++) {
