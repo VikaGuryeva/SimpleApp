@@ -17,7 +17,6 @@ public class MainApp {
 
   public static void main(String[] args) throws IOException {
     Logger logger = Logger.getLogger(MainApp.class.getName());
-    logger.info(() -> "Hello word 2024.02.03!");
     List<String> rheo = new ArrayList<>();
 
     for (String s : Files.readAllLines(Path.of("2023-11-15 13-17-59 375 aper.csv"), Charset.defaultCharset())) {
@@ -41,7 +40,7 @@ public class MainApp {
     Files.writeString(Path.of("output.txt"),
         DoubleStream.of(y).mapToObj("%.6f"::formatted).collect(Collectors.joining("\n")));
 
-    List<List<Double>> result = splitIntoSubarrays(y);
+    List<List<Double>> result = splitIntoSubArrays(y);
     logger.info(result::toString);
 
     Files.writeString(Path.of("output2.txt"), result.toString());
@@ -58,51 +57,48 @@ public class MainApp {
 
     List<Integer> extremeIndexes = findMaximaIndexes(y, extremeValues);
     logger.info(extremeIndexes::toString);
-    Files.writeString(Path.of("output_extremeindex.txt"), extremeIndexes.toString());
+    Files.writeString(Path.of("output_extreme_index.txt"), extremeIndexes.toString());
 
     List<Double> differences = calculateModulusDifferences(extremeValues);
     logger.info(differences::toString);
     Files.writeString(Path.of("output_module.txt"), differences.toString());
 
     List<Double> maxima = extractMaxima(extremeValues);
+    Files.writeString(Path.of("extreme_max.txt"), toString(maxima));
     List<Double> minima = extractMinima(extremeValues);
-    logger.info(maxima::toString);
-    Files.writeString(Path.of("extreme_max.txt"),
-        maxima.toString());
-
-    logger.info(minima::toString);
-    Files.writeString(Path.of("extreme_min.txt"), minima.toString());
-
+    Files.writeString(Path.of("extreme_min.txt"), toString(minima));
     List<Integer> maximaIndexes = findMaximaIndexes(y, maxima);
-    logger.info(maximaIndexes::toString);
-    Files.writeString(Path.of("Index_max.txt"), maximaIndexes.toString());
+    Files.writeString(Path.of("Index_max.txt"), toString(maximaIndexes));
 
     List<Double> indexDifferences = calculateIndexDifferences(maximaIndexes);
-    logger.info(indexDifferences::toString);
-    Files.writeString(Path.of("Modulumax_Breathe rate.txt"), indexDifferences.toString());
+    Files.writeString(Path.of("Module_max_Breathe rate.txt"), indexDifferences.toString());
   }
 
-  public static List<List<Double>> splitIntoSubarrays(double[] doubles) {
-    List<List<Double>> subarrays = new ArrayList<>(); //
+  private static <T extends Number> String toString(List<T> x) {
+    return x.stream().map(Number::doubleValue).map("%.6f"::formatted).collect(Collectors.joining("\n"));
+  }
 
-    List<Double> currentSubarray = new ArrayList<>();
+  public static List<List<Double>> splitIntoSubArrays(double[] doubles) {
+    List<List<Double>> subArrays = new ArrayList<>(); //
+
+    List<Double> currentSubArray = new ArrayList<>();
 
     for (double num : doubles) {
-      if (currentSubarray.isEmpty() || (num > 0 && currentSubarray.getFirst() > 0) || (num < 0 && currentSubarray.getFirst() < 0)) {
-        currentSubarray.add(num);
+      if (currentSubArray.isEmpty() || (num > 0 && currentSubArray.getFirst() > 0) || (num < 0 && currentSubArray.getFirst() < 0)) {
+        currentSubArray.add(num);
       }
       else {
-        subarrays.add(currentSubarray);
-        currentSubarray = new ArrayList<>();
-        currentSubarray.add(num);
+        subArrays.add(currentSubArray);
+        currentSubArray = new ArrayList<>();
+        currentSubArray.add(num);
       }
     }
 
-    if (!currentSubarray.isEmpty()) {
-      subarrays.add(currentSubarray);
+    if (!currentSubArray.isEmpty()) {
+      subArrays.add(currentSubArray);
     }
 
-    return subarrays;
+    return subArrays;
   }
 
   public static double findExtremeValue(List<Double> subarray, boolean findMax) {
