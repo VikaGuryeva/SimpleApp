@@ -21,3 +21,4 @@ CVS
 out/*
 .gradle
 /spring.log*
+*.txt
