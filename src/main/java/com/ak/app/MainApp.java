@@ -22,8 +22,7 @@ public class MainApp {
     for (String s : Files.readAllLines(Path.of("2023-11-15 13-17-59 375 aper.csv"), Charset.defaultCharset())) {
       rheo.add(s.split(";")[1]);
     }
-
-    double[] x = rheo.stream().mapToDouble(Double::parseDouble).toArray();
+    double[] x = Arrays.copyOfRange(rheo.stream().mapToDouble(Double::parseDouble).toArray(), 17_400, 55_019);
     logger.info(() -> Arrays.toString(x));
 
     double[] q = new double[x.length];
@@ -53,15 +52,15 @@ public class MainApp {
       extremeValues.add(extreme);
     }
     logger.info(extremeValues::toString);
-    Files.writeString(Path.of("output_extreme.txt"), extremeValues.toString());
+    Files.writeString(Path.of("output_extreme.txt"), toString(extremeValues));
 
     List<Integer> extremeIndexes = findMaximaIndexes(y, extremeValues);
     logger.info(extremeIndexes::toString);
-    Files.writeString(Path.of("output_extreme_index.txt"), extremeIndexes.toString());
+    Files.writeString(Path.of("output_extreme_index.txt"), toString(extremeIndexes));
 
     List<Double> differences = calculateModulusDifferences(extremeValues);
     logger.info(differences::toString);
-    Files.writeString(Path.of("output_module.txt"), differences.toString());
+    Files.writeString(Path.of("output_module.txt"), toString(differences));
 
     List<Double> maxima = extractMaxima(extremeValues);
     Files.writeString(Path.of("extreme_max.txt"), toString(maxima));
@@ -71,7 +70,7 @@ public class MainApp {
     Files.writeString(Path.of("Index_max.txt"), toString(maximaIndexes));
 
     List<Double> indexDifferences = calculateIndexDifferences(maximaIndexes);
-    Files.writeString(Path.of("Module_max_Breathe rate.txt"), indexDifferences.toString());
+    Files.writeString(Path.of("Module_max_Breathe rate.txt"),toString(indexDifferences));
   }
 
   private static <T extends Number> String toString(List<T> x) {
